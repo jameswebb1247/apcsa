@@ -1,70 +1,56 @@
-# Community Compass Mural — 8x8 Asphalt Art
+# Balloon Neighborhood Runner — Asphalt Art
 
-An AP CSA "Painter" project that designs a neighborhood asphalt art mural
-on an 8x8 grid, built around `PainterPlus` (the Code.org starter class
-imported from the Backpack).
+An AP CSA "Neighborhood" project (`org.code.neighborhood`) that paints a
+balloon-themed mural: solid balloon rows with dashed strings hanging
+below them. Built for Code.org's Java Lab / World editor.
 
 ## Files
 
-- `src/Painter.java` — local stand-in for the Code.org-provided `Painter`
-  engine class (grid, position, direction, color, paint). Not needed
-  inside Code.org's Java Lab, which already supplies its own; it's here
-  so this project compiles and runs from the command line.
-- `src/PainterPlus.java` — the imported starter class (extends `Painter`)
-  with general-purpose helper methods (`turnAround`, `moveAndPaint`,
-  `paintEntireRow`, `paintEntireColumn`).
-- `src/MuralPainter.java` — **new subclass of `PainterPlus`** written for
-  this project. It implements the actual mural design as three
-  decomposed components (border, weave field, center hub).
-- `src/AsphaltArtDriver.java` — builds an 8x8 `MuralPainter`, paints the
-  mural, prints a text preview, and exports `mural.html` so the result
-  can be viewed in a browser.
+- `PainterPlus.java` — the starter class (extends `Painter`) with two
+  general-purpose helpers used by every painter: `turnRight()` (there's
+  only `turnLeft()` in the base API) and `takeAllPaint()` (refill fully
+  from a bucket instead of one unit at a time).
+- `BalloonPainter.java` — **new subclass of `PainterPlus`**. Paints the
+  "balloons": a solid row of color, refilling from any bucket it
+  crosses. Method: `paintRow()`.
+- `StringPainter.java` — **second new subclass of `PainterPlus`**.
+  Paints the "strings": a dashed line (every other square) hanging
+  below a balloon. Method: `paintDashedLine(int length)`.
+- `NeighborhoodRunner.java` — creates the `World` and one of each
+  painter, then runs both.
 
-## Design
-
-A "Community Compass": a bright orange safety border (like a real
-crosswalk mural), a teal/gold woven interior representing many different
-people crossing paths, and a red 2x2 hub at the exact center
-representing the neighborhood's shared meeting point.
+Two separate subclasses of `PainterPlus` — rather than one subclass
+extending another — because balloons and strings are independent
+components with their own start position (set per-class in the World
+editor), not a specialization of one another.
 
 ## Problem-solving process
 
-1. **Understand**: the mural should be visually striking, safety-minded
-   (high-contrast border), and symbolize community members converging
-   from every direction.
-2. **Decompose**: split the design into three independent components,
-   one method each — `paintSafetyBorder`, `paintWeaveField`,
-   `paintCommunityHub` — combined in `paintCommunityMural`.
-3. **Algorithm**: each component uses
-   - **sequencing** — the three components are painted in a fixed order
-     so the hub is layered on top last;
-   - **iteration** — nested `for` loops walk the grid (or the relevant
-     sub-region);
-   - **selection** — `if`/`else` logic decides, per square, whether it's
-     on the border, part of the center hub, or which of two weave
-     colors it gets.
-4. **Test**: run `AsphaltArtDriver`, check the printed grid and the
-   exported `mural.html`.
+1. **Understand**: a balloon reads as solid color; a string reads as a
+   thin, broken line hanging below it.
+2. **Decompose**: one class per visual component (`BalloonPainter`,
+   `StringPainter`), each with its own small helper method, instead of
+   one long method doing everything.
+3. **Algorithms** (two distinct ones, each combining sequencing,
+   selection, and iteration):
+   - `BalloonPainter.paintRow()` — loops with `while (canMove())`,
+     refilling paint only when `isOnBucket()` and painting only when
+     `canPaint()`, moving forward each pass.
+   - `StringPainter.paintDashedLine(length)` — loops a fixed number of
+     times with a `for` loop, painting only on even steps
+     (`step % 2 == 0`) to create the dashed pattern.
+4. **Test**: run in Code.org's Java Lab against the World you've laid
+   out (balloon painter start squares, string painter start squares,
+   and paint buckets), and adjust bucket placement/colors or
+   `paintDashedLine`'s length as needed.
 
-## Run it
+## Using it
 
-```
-cd asphalt-art/src
-javac *.java
-java AsphaltArtDriver
-```
+Paste these four files into your Code.org Java Lab project (they
+replace whatever `PainterPlus.java` / `NeighborhoodRunner.java` you
+already have there), place a `BalloonPainter` and a `StringPainter` in
+the World editor with paint buckets nearby, and run.
 
-Open the generated `mural.html` in a browser to see the finished mural.
-
-## Using this in Code.org Java Lab
-
-Only `PainterPlus.java` and `MuralPainter.java` need to be copied into
-your Code.org project — Java Lab already provides its own `Painter`
-class and canvas, so skip this repo's `Painter.java`. Create a `Painter`
-(or however your project's canvas/painter is instantiated) with an 8x8
-grid, then call:
-
-```java
-MuralPainter painter = new MuralPainter(8);
-painter.paintCommunityMural("orange", "teal", "gold", "red");
-```
+Note: `org.code.neighborhood` is Code.org's own library, so this code
+can only be compiled and run inside Java Lab — it isn't available to
+compile from the command line here.
