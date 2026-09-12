@@ -1,9 +1,9 @@
 # Balloon Neighborhood Runner — Asphalt Art
 
 An AP CSA "Neighborhood" project (`org.code.neighborhood`) that paints
-one green balloon — a small colored square with a solid white string
-hanging straight down. Built for Code.org's Java Lab. Needs a grid at
-least 2 columns wide by 6 rows tall.
+one big green balloon, roughly centered, with a white string that
+curves gently as it hangs down. Built for Code.org's Java Lab. Needs
+a grid at least 8 columns wide by 8 rows tall.
 
 ## Files
 
@@ -17,24 +17,25 @@ least 2 columns wide by 6 rows tall.
   their own spot instead of always starting at (0, 0).
 - `BalloonPainter.java` — **new subclass of `PainterPlus`**. Takes an
   `(x, y)` starting spot, faces east with 100 units of paint, and
-  paints one "balloon": a solid 2x2 square instead of a stripe across
-  the whole grid. Method: `paintBalloon(String color)`.
+  fills a `size x size` square by snaking back and forth row by row
+  (like mowing a lawn), so the balloon can be as big as you want.
+  Method: `paintBalloon(int size, String color)`.
 - `StringPainter.java` — **second new subclass of `PainterPlus`**.
   Takes an `(x, y)` starting spot, faces south with 100 units of
-  paint, and paints a "string": a solid line straight down for a
-  given number of spaces. Method:
-  `paintString(int length, String color)`.
-- `NeighborhoodRunner.java` — creates one `BalloonPainter` (green) and
-  one `StringPainter` (white) hanging below it. No `World` object
-  needed in code.
+  paint, and paints straight down but nudges a step sideways every
+  other move, alternating left and right, so the string comes out
+  with a bit of a wave instead of a perfectly straight line. Method:
+  `paintCurvedString(int length, String color)`.
+- `NeighborhoodRunner.java` — creates one 4x4 `BalloonPainter` (green)
+  centered near the top of the grid and one `StringPainter` (white)
+  hanging below it. No `World` object needed in code.
 
 Two separate subclasses of `PainterPlus` — rather than one subclass
 extending another — because the balloon and the string are
 independent components, each with its own starting position and
 direction, not a specialization of one another. Both take their
-`(x, y)` as constructor arguments instead of hardcoding one spot,
-so `NeighborhoodRunner` can place either one wherever it wants (or
-add more of each without them landing on top of one another).
+`(x, y)` as constructor arguments instead of hardcoding one spot, so
+`NeighborhoodRunner` can place either one wherever it wants.
 
 Both start with `setPaint(100)` in their constructor instead of
 relying only on paint buckets, since a fresh `Painter` starts with 0
@@ -42,27 +43,30 @@ paint and `hasPaint()` would otherwise stay false forever.
 
 ## Problem-solving process
 
-1. **Understand**: a full-width painted row reads as a banner, not a
-   balloon, and a dashed line looks like broken blocks rather than a
-   string on a grid this size — the shapes themselves needed to
-   change, not just the bug that made nothing paint.
+1. **Understand**: a bigger balloon means more than 4 cells, so the
+   old "trace the 4 corners" trick doesn't scale — it needed a real
+   fill algorithm. A grid can't draw an actual curve either, since a
+   Painter only moves in the 4 cardinal directions, so "a bit of a
+   curve" has to be faked with small sideways steps.
 2. **Decompose**: pull the two moves every painter needs — grab paint
    from a bucket, paint only if there's paint to use — up into
-   `PainterPlus`, so each subclass's method only has to describe its
-   own shape, not repeat that bookkeeping.
+   `PainterPlus`. Inside `BalloonPainter`, pull "step down to the next
+   row and flip direction" into its own `dropDownARow` method so the
+   main loop just describes rows, not turns.
 3. **Algorithms** (two distinct ones, each combining sequencing,
-   selection, and/or iteration):
-   - `BalloonPainter.paintBalloon(color)` — a fixed sequence of
-     paint/move/turn calls that traces the four corners of a 2x2
-     square, each move guarded by `if (canMove())` (sequencing +
-     selection).
-   - `StringPainter.paintString(length, color)` — a `for` loop that
-     paints and moves south a fixed number of times (iteration +
-     selection, since `paintIfHasPaint` only paints when there's still
-     paint left).
+   selection, and iteration):
+   - `BalloonPainter.paintBalloon(size, color)` — nested loops fill
+     every row of the square, alternating the direction each row
+     (a boustrophedon/"lawnmower" pattern) so the painter never has to
+     walk back over painted ground.
+   - `StringPainter.paintCurvedString(length, color)` — a `for` loop
+     moves south, and every other step calls `nudgeSideways` to step
+     one space east or west (alternating which side) before
+     continuing south, faking a curve out of straight-line moves.
 4. **Test**: run in Code.org's Java Lab and check the preview; adjust
-   the starting coordinates, colors, or `paintString`'s length as
-   needed.
+   the starting coordinates, `size`, colors, or `paintCurvedString`'s
+   length as needed. This layout was also checked against a local
+   simulation of the documented API before handing it off.
 
 ## Using it
 
@@ -80,5 +84,4 @@ expected" errors.
 
 Note: `org.code.neighborhood` is Code.org's own library, so this code
 can only be compiled and run inside Java Lab — it isn't available to
-compile from the command line here. The layout was checked with a
-local simulation of the documented API instead.
+compile from the command line here.
