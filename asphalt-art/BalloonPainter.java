@@ -4,23 +4,23 @@ public class BalloonPainter extends PainterPlus {
     super();
   }
 
-  /* fills a whole row solid so it reads as one balloon
+  /* fills a whole row with one color so it reads as one balloon
      instead of a bunch of separate squares */
-  public void paintRow() {
+  public void paintRow(String color) {
     while (canMove()) {
-      paintHere();
+      paintHere(color);
       move();
     }
-    paintHere(); // the loop stops one square short of the edge
+    paintHere(color); // the loop stops one square short of the edge
   }
 
   // refills paint if it's on a bucket, then paints if it has any
-  private void paintHere() {
+  private void paintHere(String color) {
     if (isOnBucket()) {
       takeAllPaint();
     }
-    if (canPaint()) {
-      paint();
+    if (hasPaint()) {
+      paint(color);
     }
   }
 }

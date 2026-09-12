@@ -12,10 +12,10 @@ below them. Built for Code.org's Java Lab / World editor.
   from a bucket instead of one unit at a time).
 - `BalloonPainter.java` — **new subclass of `PainterPlus`**. Paints the
   "balloons": a solid row of color, refilling from any bucket it
-  crosses. Method: `paintRow()`.
+  crosses. Method: `paintRow(String color)`.
 - `StringPainter.java` — **second new subclass of `PainterPlus`**.
   Paints the "strings": a dashed line (every other square) hanging
-  below a balloon. Method: `paintDashedLine(int length)`.
+  below a balloon. Method: `paintDashedLine(int length, String color)`.
 - `NeighborhoodRunner.java` — creates the `World` and one of each
   painter, then runs both.
 
@@ -33,11 +33,11 @@ editor), not a specialization of one another.
    one long method doing everything.
 3. **Algorithms** (two distinct ones, each combining sequencing,
    selection, and iteration):
-   - `BalloonPainter.paintRow()` — loops with `while (canMove())`,
+   - `BalloonPainter.paintRow(color)` — loops with `while (canMove())`,
      refilling paint only when `isOnBucket()` and painting only when
-     `canPaint()`, moving forward each pass.
-   - `StringPainter.paintDashedLine(length)` — loops a fixed number of
-     times with a `for` loop, painting only on even steps
+     `hasPaint()`, moving forward each pass.
+   - `StringPainter.paintDashedLine(length, color)` — loops a fixed
+     number of times with a `for` loop, painting only on even steps
      (`step % 2 == 0`) to create the dashed pattern.
 4. **Test**: run in Code.org's Java Lab against the World you've laid
    out (balloon painter start squares, string painter start squares,
