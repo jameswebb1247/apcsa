@@ -46,10 +46,20 @@ editor), not a specialization of one another.
 
 ## Using it
 
-Paste these four files into your Code.org Java Lab project (they
-replace whatever `PainterPlus.java` / `NeighborhoodRunner.java` you
-already have there), place a `BalloonPainter` and a `StringPainter` in
-the World editor with paint buckets nearby, and run.
+In Java Lab, make sure each file below fully replaces whatever is
+already in the matching tab — select-all and delete the old content
+before pasting, don't paste on top of it. The filename has to match
+the class name exactly (`BalloonPainter.java`, not `Ballonpainter.java`
+or similar), or you'll get a wall of "class, interface, or enum
+expected" errors.
+
+- `PainterPlus.java`
+- `BalloonPainter.java`
+- `StringPainter.java`
+- `NeighborhoodRunner.java`
+
+Then place a `BalloonPainter` and a `StringPainter` in the World editor
+with paint buckets nearby, and run.
 
 Note: `org.code.neighborhood` is Code.org's own library, so this code
 can only be compiled and run inside Java Lab — it isn't available to
