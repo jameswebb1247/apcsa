@@ -6,6 +6,11 @@ public class PainterPlus extends Painter {
     super();
   }
 
+  // lets subclasses start at a specific spot instead of always (0, 0)
+  public PainterPlus(int x, int y, String direction, int paint) {
+    super(x, y, direction, paint);
+  }
+
   // no turnRight() built in, so just turn left 3 times instead
   public void turnRight() {
     turnLeft();
