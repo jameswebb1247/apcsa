@@ -20,4 +20,18 @@ public class PainterPlus extends Painter {
       takePaint();
     }
   }
+
+  // grabs paint if standing on a bucket, shared by every subclass below
+  public void checkForBucket() {
+    if (isOnBucket()) {
+      takeAllPaint();
+    }
+  }
+
+  // paints the current space if there is paint left to use
+  public void paintIfHasPaint(String color) {
+    if (hasPaint()) {
+      paint(color);
+    }
+  }
 }

@@ -6,18 +6,22 @@ below them. Built for Code.org's Java Lab / World editor.
 
 ## Files
 
-- `PainterPlus.java` — the starter class (extends `Painter`) with two
-  general-purpose helpers used by every painter: `turnRight()` (there's
-  only `turnLeft()` in the base API) and `takeAllPaint()` (refill fully
-  from a bucket instead of one unit at a time).
+- `PainterPlus.java` — the starter class (extends `Painter`) with
+  shared helpers used by every painter below: `turnRight()` (there's
+  only `turnLeft()` in the base API), `takeAllPaint()` (refill fully
+  from a bucket instead of one unit at a time), `checkForBucket()`
+  (refill only if standing on a bucket), and `paintIfHasPaint(color)`
+  (paint only if there's paint left to use).
 - `BalloonPainter.java` — **new subclass of `PainterPlus`**. Paints the
   "balloons": a solid row of color, refilling from any bucket it
   crosses. Method: `paintRow(String color)`.
 - `StringPainter.java` — **second new subclass of `PainterPlus`**.
   Paints the "strings": a dashed line (every other square) hanging
   below a balloon. Method: `paintDashedLine(int length, String color)`.
-- `NeighborhoodRunner.java` — creates the `World` and one of each
-  painter, then runs both.
+- `NeighborhoodRunner.java` — creates one of each painter and runs
+  them. No `World` object needed in code — the World editor already
+  sets that up, and each painter starts wherever its class is placed
+  there.
 
 Two separate subclasses of `PainterPlus` — rather than one subclass
 extending another — because balloons and strings are independent
@@ -28,14 +32,14 @@ editor), not a specialization of one another.
 
 1. **Understand**: a balloon reads as solid color; a string reads as a
    thin, broken line hanging below it.
-2. **Decompose**: one class per visual component (`BalloonPainter`,
-   `StringPainter`), each with its own small helper method, instead of
-   one long method doing everything.
+2. **Decompose**: pull the two moves every painter needs — grab paint
+   from a bucket, paint only if there's paint to use — up into
+   `PainterPlus`, so each subclass's method only has to describe its
+   own pattern, not repeat that bookkeeping.
 3. **Algorithms** (two distinct ones, each combining sequencing,
    selection, and iteration):
    - `BalloonPainter.paintRow(color)` — loops with `while (canMove())`,
-     refilling paint only when `isOnBucket()` and painting only when
-     `hasPaint()`, moving forward each pass.
+     refilling and painting every space, moving forward each pass.
    - `StringPainter.paintDashedLine(length, color)` — loops a fixed
      number of times with a `for` loop, painting only on even steps
      (`step % 2 == 0`) to create the dashed pattern.

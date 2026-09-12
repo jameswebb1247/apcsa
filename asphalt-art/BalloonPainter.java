@@ -1,26 +1,14 @@
 public class BalloonPainter extends PainterPlus {
 
-  public BalloonPainter() {
-    super();
-  }
-
-  /* fills a whole row with one color so it reads as one balloon
-     instead of a bunch of separate squares */
+  /* walks forward across the row, grabbing paint from any bucket
+     it crosses, and fills in the balloon color as it goes */
   public void paintRow(String color) {
     while (canMove()) {
-      paintHere(color);
+      checkForBucket();
+      paintIfHasPaint(color);
       move();
     }
-    paintHere(color); // the loop stops one square short of the edge
-  }
-
-  // refills paint if it's on a bucket, then paints if it has any
-  private void paintHere(String color) {
-    if (isOnBucket()) {
-      takeAllPaint();
-    }
-    if (hasPaint()) {
-      paint(color);
-    }
+    checkForBucket();
+    paintIfHasPaint(color); // the loop stops one space short of the wall
   }
 }

@@ -1,18 +1,12 @@
 public class StringPainter extends PainterPlus {
 
-  public StringPainter() {
-    super();
-  }
-
-  /* paints every other square so it looks like a dashed
-     string instead of a solid bar */
+  /* paints every other space so the string hanging off a
+     balloon looks dashed instead of a solid bar */
   public void paintDashedLine(int length, String color) {
-    if (isOnBucket()) {
-      takeAllPaint();
-    }
+    checkForBucket();
     for (int step = 0; step < length && canMove(); step++) {
-      if (step % 2 == 0 && hasPaint()) {
-        paint(color); // only paint on the even steps
+      if (step % 2 == 0) {
+        paintIfHasPaint(color);
       }
       move();
     }
