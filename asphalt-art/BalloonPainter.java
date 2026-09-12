@@ -1,20 +1,28 @@
 public class BalloonPainter extends PainterPlus {
 
-  // starts at the top-left corner, facing east, with plenty of paint
-  public BalloonPainter() {
-    super(0, 0, "East", 0);
+  // starts wherever it's placed, facing east, with plenty of paint
+  public BalloonPainter(int x, int y) {
+    super(x, y, "East", 0);
     setPaint(100);
   }
 
-  /* walks forward across the row, grabbing paint from any bucket
-     it crosses, and fills in the balloon color as it goes */
-  public void paintRow(String color) {
-    while (canMove()) {
-      checkForBucket();
-      paintIfHasPaint(color);
+  /* traces a small 2x2 square so it reads as one round balloon
+     instead of a stripe across the whole grid */
+  public void paintBalloon(String color) {
+    paintIfHasPaint(color);       // top-left corner
+    if (canMove()) {
       move();
+      paintIfHasPaint(color);     // top-right corner
     }
-    checkForBucket();
-    paintIfHasPaint(color); // the loop stops one space short of the wall
+    turnRight();
+    if (canMove()) {
+      move();
+      paintIfHasPaint(color);     // bottom-right corner
+    }
+    turnRight();
+    if (canMove()) {
+      move();
+      paintIfHasPaint(color);     // bottom-left corner
+    }
   }
 }
