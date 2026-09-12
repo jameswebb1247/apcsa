@@ -1,9 +1,9 @@
 # Balloon Neighborhood Runner — Asphalt Art
 
-An AP CSA "Neighborhood" project (`org.code.neighborhood`) that paints a
-bunch of three balloons — small colored squares, each with a solid
-string hanging straight down. Built for Code.org's Java Lab. Needs a
-grid at least 8 columns wide by 6 rows tall.
+An AP CSA "Neighborhood" project (`org.code.neighborhood`) that paints
+one green balloon — a small colored square with a solid white string
+hanging straight down. Built for Code.org's Java Lab. Needs a grid at
+least 2 columns wide by 6 rows tall.
 
 ## Files
 
@@ -24,17 +24,17 @@ grid at least 8 columns wide by 6 rows tall.
   paint, and paints a "string": a solid line straight down for a
   given number of spaces. Method:
   `paintString(int length, String color)`.
-- `NeighborhoodRunner.java` — creates three balloons (red, yellow,
-  blue) spaced three columns apart, each with a string hanging below
-  it. No `World` object needed in code.
+- `NeighborhoodRunner.java` — creates one `BalloonPainter` (green) and
+  one `StringPainter` (white) hanging below it. No `World` object
+  needed in code.
 
 Two separate subclasses of `PainterPlus` — rather than one subclass
-extending another — because balloons and strings are independent
-components, each with its own starting position and direction, not a
-specialization of one another. Both take their `(x, y)` as
-constructor arguments instead of hardcoding one spot, which is what
-lets `NeighborhoodRunner` place three of each without them landing on
-top of one another.
+extending another — because the balloon and the string are
+independent components, each with its own starting position and
+direction, not a specialization of one another. Both take their
+`(x, y)` as constructor arguments instead of hardcoding one spot,
+so `NeighborhoodRunner` can place either one wherever it wants (or
+add more of each without them landing on top of one another).
 
 Both start with `setPaint(100)` in their constructor instead of
 relying only on paint buckets, since a fresh `Painter` starts with 0
